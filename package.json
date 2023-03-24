@@ -1,0 +1,24 @@
+{
+  "name": "onedemic-server",
+  "version": "1.0.0",
+  "description": "API's for onedemic",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "nodemone index.js"
+  },
+  "author": "A.K.M Fozlol Hoq",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "errorhandler": "^1.5.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "firebase-admin": "^11.5.0",
+    "mongoose": "^7.0.2"
+  }
+}
