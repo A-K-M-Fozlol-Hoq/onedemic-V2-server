@@ -26,7 +26,8 @@ const examSchema = new Schema(
       required: true,
     },
     questionPaperID: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PDF",
     },
     mcqQuestions: [
       {
