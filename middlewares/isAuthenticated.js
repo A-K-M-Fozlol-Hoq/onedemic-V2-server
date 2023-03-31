@@ -1,39 +1,30 @@
-// const { getAuth } = require("firebase-admin/auth");
+//external imports
+const createError = require("http-errors");
+const { getAuth } = require("firebase-admin/auth");
+
+//internal imports
 const admin = require("../config/firebase.config.js");
 
+//create isAuthenticated middleware
 const isAuthenticated = (req, res, next) => {
   try {
-    console.log("trying");
     if (!req.headers?.authorization?.startsWith("Bearer ")) {
-      console.log("found authorization");
-      console.log(req.headers.authorization);
-      // return res.status(401).send({ message: "unauthorized" });
+      next(createError(401, "Please send a valid token"));
     } else {
       const token = req.headers.authorization.split(" ")[1];
-      console.log({ token, admin });
-      // console.log({ token, admin });
-      // getAuth(admin)
-      //   .verifyIdToken(token)
-      //   .then((decodedUser) => {
-      //     if (!decodedUser) {
-      //       return res.status(403).send({ message: "forbidden" });
-      //     }
-      //     req.user = decodedUser;
-      //     console.log(decodedUser, "decodedUser");
-      //     next();
-      //   })
-      //   .catch((err) => {
-      //     console.log(err, "decodedUser");
-      //     if (err.code === "auth/id-token-expired") {
-      //       return res.status(403).json({
-      //         message: "Session Expired please login again",
-      //       });
-      //     }
-      //     console.log({
-      //       code: err.code,
-      //     });
-      //     return res.status(500).json({ message: err.message });
-      //   });
+      getAuth(admin)
+        .verifyIdToken(token)
+        .then((decodedUser) => {
+          console.log({ decodedUser });
+          if (!decodedUser) {
+            next(createError(401, "Failed to decode user from the token"));
+          }
+          req.user = decodedUser;
+          next();
+        })
+        .catch((err) => {
+          next(createError(401, "Session Expired please login again"));
+        });
     }
   } catch (err) {
     console.log({
@@ -43,4 +34,5 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
+//export isAuthenticated middleware
 module.exports = isAuthenticated;
