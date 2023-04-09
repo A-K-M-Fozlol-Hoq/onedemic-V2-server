@@ -13,7 +13,7 @@ const router = express.Router();
  * @method POST
  * @endpoint base_url/api/user/createUser
  */
-router.post("/createUser", isAuthenticated, isUserValid, createUser);
+router.post("/createUser", isAuthenticated, createUser);
 
 /**
  * @method GET

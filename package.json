@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node index.js",
-    "dev": "nodemon index.js"
+    "dev": "NODE_ENV=development nodemon index.js"
   },
   "author": "A.K.M Fozlol Hoq",
   "license": "ISC",
@@ -25,6 +25,6 @@
     "mime": "^3.0.0",
     "mongoose": "^7.0.2",
     "morgan": "^1.10.0",
-    "stripe": "^11.16.0"
+    "stripe": "^11.17.0"
   }
 }

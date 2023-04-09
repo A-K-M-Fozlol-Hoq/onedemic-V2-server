@@ -1,3 +1,5 @@
+const stripe = require("stripe")(process.env.STRIPE_API_SECRET_KEY);
+
 // internal imports
 const User = require("../models/User");
 
@@ -5,38 +7,44 @@ const User = require("../models/User");
 const userController = {};
 
 // insert new user at user collection
-userController.createUser = async (req, res, next) => {
+userController.createUser = async (req, res) => {
   try {
-    console.log("execut8ing try");
-    return res.status(200).send({
-      isSuccess: false,
-      message: "user data successfully saved",
-      result: null,
-      token: null,
-    });
+    // // create Stripe customer ID
+    // const customer = await stripe.customers.create({
+    //   email: req.body.email,
+    // });
 
+    // // stripeCustomerID: ,
+
+    // // create newUserData object
     // const newUserData = {
-    //   name: name,
-    //   email: email,
-    //   userType: userType,
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   role: req.body.role,
+    //   status: req.body.status,
+    //   profile: req.body.profile,
+    //   uid: req.body.uid,
+    //   selectedPlan: req.body.selectedPlan,
+    //   stripeCustomerID: customer.id,
+    //   usedCreditToday: 0,
+    //   // refrestToken: req.body.refrestToken,
     // };
+
+    // // create new user instance
     // const newUser = new User(newUserData);
-    // console.log(newUser);
-    // // save at database
+
+    // // save user at dabase
     // const result = await newUser.save();
-    // // create jwt token
-    // var token = jwt.sign({ newUserData }, process.env.JWT_SECRET, {
-    //   expiresIn: process.env.JWT_EXPIRE, // expires in 1 day
-    // });
-    // res.status(200).json({
-    //   isSuccess: true,
-    //   message: "user data successfully saved",
-    //   result,
-    //   token,
-    // });
-  } catch (e) {
-    res.status(e.code || 500).send({
-      message: e.message || `unknown error ocurred at user controller`,
+
+    // send success response
+    res.status(200).json({
+      isSuccess: true,
+      message: "user data successfully saved",
+      user: req.user,
+    });
+  } catch (err) {
+    res.status(err.code || 500).send({
+      message: err.message || `unknown error ocurred at user controller`,
       isSuccess: false,
     });
   }

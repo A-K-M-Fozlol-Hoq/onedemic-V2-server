@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-// const errorhandler = require("errorhandler");
 const session = require("express-session");
 const fileUpload = require("express-fileupload");
 const axios = require("axios");
@@ -15,8 +14,6 @@ const {
   notFoundHandler,
   commonErrorHandler,
 } = require("./middlewares/errorHandler");
-// const errorHandler = require("errorhandler");
-// const defaultErrorHandler = require("./middlewares/defaultErrorHandler");
 
 //create app object and define port
 const app = express();
@@ -26,7 +23,6 @@ const PORT = process.env.PORT || 5000;
 const middlewares = [
   cors(),
   express.json({ limit: "10mb" }),
-  // errorhandler({ dumpExceptions: true, showStack: true }),
   cookieParser(),
   fileUpload(),
   express.urlencoded({ extended: true }),
@@ -54,7 +50,6 @@ app.use(notFoundHandler);
 
 // common error handler
 app.use(commonErrorHandler);
-// app.use(defaultErrorHandler);
 
 // Listening to server
 mongoDBConnect

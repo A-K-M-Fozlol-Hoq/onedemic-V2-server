@@ -16,7 +16,6 @@ try {
         process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
       client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
     }),
-    // databaseURL: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.lmvgg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
   });
   console.log("firebase initialized successfully");
 } catch (e) {

@@ -1,5 +1,5 @@
-const { connect, set } = require("mongoose");
-// set("strictQuery", false);
+//external imports
+const { connect } = require("mongoose");
 
 const liveURL = process.env.MONGO_STR_LIVE;
 const testURL = process.env.MONGO_STR_TEST;

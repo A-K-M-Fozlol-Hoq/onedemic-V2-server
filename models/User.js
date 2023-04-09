@@ -58,11 +58,7 @@ const userSchema = new Schema(
     lastLogin: {
       type: Date,
       required: true,
-      default: Date.now,
-    },
-    accessToken: {
-      type: String,
-      required: true,
+      default: Date.now(),
     },
   },
   {
