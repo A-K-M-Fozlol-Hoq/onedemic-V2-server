@@ -1,5 +1,7 @@
+//external imports
 const firebaseAdmin = require("firebase-admin");
 
+//Declar admin object -- module scaffolding
 let admin;
 try {
   admin = firebaseAdmin.initializeApp({
@@ -22,4 +24,5 @@ try {
   console.log("firabase initialization error", e);
 }
 
+//export admin object
 module.exports = admin;

@@ -9,32 +9,43 @@ const userController = {};
 // insert new user at user collection
 userController.createUser = async (req, res) => {
   try {
-    // // create Stripe customer ID
-    // const customer = await stripe.customers.create({
-    //   email: req.body.email,
-    // });
+    // create Stripe customer ID
+    const customer = await stripe.customers.create({
+      email: req.body.email,
+    });
 
-    // // stripeCustomerID: ,
+    //Create end date. End data is 7 days later from today.
+    const now = new Date();
+    const endDate = new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + 7,
+        now.getUTCHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds()
+      )
+    );
 
-    // // create newUserData object
-    // const newUserData = {
-    //   name: req.body.name,
-    //   email: req.body.email,
-    //   role: req.body.role,
-    //   status: req.body.status,
-    //   profile: req.body.profile,
-    //   uid: req.body.uid,
-    //   selectedPlan: req.body.selectedPlan,
-    //   stripeCustomerID: customer.id,
-    //   usedCreditToday: 0,
-    //   // refrestToken: req.body.refrestToken,
-    // };
+    // create newUserData object
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email,
+      role: req.body.role,
+      status: req.body.status,
+      profile: req.body.profile,
+      uid: req.body.uid,
+      selectedPlan: req.body.selectedPlan,
+      stripeCustomerID: customer.id,
+      usedCreditToday: 0,
+      endDate,
+    };
 
-    // // create new user instance
-    // const newUser = new User(newUserData);
+    // create new user instance
+    const newUser = new User(newUserData);
 
-    // // save user at dabase
-    // const result = await newUser.save();
+    // save user at dabase
+    const result = await newUser.save();
 
     // send success response
     res.status(200).json({
@@ -50,7 +61,9 @@ userController.createUser = async (req, res) => {
   }
 };
 
-userController.getUser = async (req, res, next) => {};
+userController.getUser = async (req, res, next) => {
+  res.status(422).send({ isSuccess: false, message: "endpoint on progress" });
+};
 
 // userController.getUser = async (req, res, next) => {
 //   try {

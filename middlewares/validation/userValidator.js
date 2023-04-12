@@ -2,6 +2,9 @@
 const Joi = require("joi");
 const createError = require("http-errors");
 
+//User validator object -- module scaffolding
+const userValidator = {};
+
 // creating userSchema for joi validdator
 const userSchema = Joi.object({
   name: Joi.string().required(),
@@ -18,7 +21,7 @@ const userSchema = Joi.object({
 });
 
 // creating  isUserValid middleware
-const isUserValid = (req, res, next) => {
+userValidator.isUserValid = (req, res, next) => {
   const { error } = userSchema.validate(req.body);
   if (error) {
     const message = error.details.map((detail) => detail.message).join(", ");
@@ -27,5 +30,5 @@ const isUserValid = (req, res, next) => {
   next();
 };
 
-// export isUserValid middleware
-module.exports = isUserValid;
+// export userValidator
+module.exports = userValidator;

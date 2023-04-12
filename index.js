@@ -5,7 +5,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const fileUpload = require("express-fileupload");
-const axios = require("axios");
 
 //internal imports
 const mongoDBConnect = require("./config/db");
@@ -37,7 +36,7 @@ if (process.env.NODE_ENV !== "production") {
 //declare routes
 app.use(routers);
 
-//test get request method
+//hello world get request method
 app.get("/", (req, res) => {
   res.status(200).send({
     message: "Hello From onedemic!❤",

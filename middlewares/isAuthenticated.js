@@ -15,7 +15,6 @@ const isAuthenticated = (req, res, next) => {
       getAuth(admin)
         .verifyIdToken(token)
         .then((decodedUser) => {
-          console.log({ decodedUser });
           if (!decodedUser) {
             next(createError(401, "Failed to decode user from the token"));
           }

@@ -25,6 +25,7 @@ const userSchema = new Schema(
     },
     profile: {
       type: String,
+      required: true,
     },
     courses: [
       {
@@ -50,6 +51,7 @@ const userSchema = new Schema(
     },
     endDate: {
       type: Date,
+      required: true,
     },
     usedCreditToday: {
       type: Number,
