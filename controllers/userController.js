@@ -62,7 +62,26 @@ userController.createUser = async (req, res) => {
 };
 
 userController.getUser = async (req, res, next) => {
-  res.status(422).send({ isSuccess: false, message: "endpoint on progress" });
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({ email: "akmfozlolhoq@gmail.com" }).select(
+      "-courses"
+    );
+    console.log(email, "this is the user data at get User", user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .send({ isSuccess: true, user, message: "endpoint on progress" });
+  } catch (err) {
+    res.status(err.code || 500).send({
+      message: err.message || `unknown error ocurred at user controller`,
+      isSuccess: false,
+    });
+  }
 };
 
 // userController.getUser = async (req, res, next) => {
