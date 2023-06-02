@@ -84,68 +84,37 @@ userController.getUser = async (req, res, next) => {
   }
 };
 
-// userController.getUser = async (req, res, next) => {
-//   try {
-//     const email = req.body.email;
+userController.updateUserNameAndProfile = async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    const { profile, name } = req.body;
 
-//     const tokenSecret = req.headers?.authorization?.split(" ")[1];
-//     if (!tokenSecret || process.env.USER_TOKEN_KEY != tokenSecret) {
-//       const error = new Error("Please send valid token!");
-//       error.code = 401;
-//       throw error;
-//     }
+    // Find user by email
+    const user = await User.findOne({ email });
 
-//     if (email) {
-//       // validation part
-//       const isEmailValid = isEmailValidFunc(email);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ isSuccess: false, message: "User not found" });
+    }
 
-//       if (isEmailValid) {
-//         // get from db
-//         const user = await User.findOne({ email: email });
-//         if (user) {
-//           // create jwt token
-//           const tokenData = {
-//             name: user.name,
-//             email: email,
-//             userType: user.userType,
-//           };
-//           var token = jwt.sign({ tokenData }, process.env.JWT_SECRET, {
-//             expiresIn: process.env.JWT_EXPIRE, // expires in 1 day
-//           });
+    // Update profile and name
+    user.profile = profile;
+    user.name = name;
 
-//           res.status(200).json({
-//             isSuccess: true,
-//             message: "found user data",
-//             user,
-//             token,
-//           });
-//         } else {
-//           res.status(400).json({
-//             isSuccess: true,
-//             message:
-//               "the data in the input request is not valid or present in the db",
-//             user,
-//             token,
-//           });
-//         }
-//       } else {
-//         res.status(422).json({
-//           isSuccess: false,
-//           message: "please provide valid email.",
-//         });
-//       }
-//     } else {
-//       res.status(422).json({
-//         isSuccess: false,
-//         message: " email is required",
-//       });
-//     }
-//   } catch (e) {
-//     res.status(e.code || 500).send({
-//       message: e.message || `unknown error ocurred at user controller`,
-//       isSuccess: false,
-//     });
-//   }
-// };
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({
+      isSuccess: true,
+      message: "User profile and name updated successfully",
+    });
+  } catch (err) {
+    res.status(err.code || 500).send({
+      message: err.message || `unknown error ocurred at user controller`,
+      isSuccess: false,
+    });
+  }
+};
 
 module.exports = userController;
