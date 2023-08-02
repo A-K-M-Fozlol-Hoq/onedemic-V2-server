@@ -1,7 +1,6 @@
-const stripe = require("stripe")(process.env.STRIPE_API_SECRET_KEY);
-
 // internal imports
 const User = require("../models/User");
+const { stripe } = require("../utils/stripe");
 
 // user controller object
 const userController = {};
@@ -37,7 +36,6 @@ userController.createUser = async (req, res) => {
       uid: req.body.uid,
       selectedPlan: req.body.selectedPlan,
       stripeCustomerID: customer.id,
-      usedCreditToday: 0,
       endDate,
     };
 
@@ -61,13 +59,11 @@ userController.createUser = async (req, res) => {
   }
 };
 
+// get user data after login
 userController.getUser = async (req, res, next) => {
   try {
     const { email } = req.params;
-    const user = await User.findOne({ email: "akmfozlolhoq@gmail.com" }).select(
-      "-courses"
-    );
-    console.log(email, "this is the user data at get User", user);
+    const user = await User.findOne({ email: email }).select("-courses");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -84,6 +80,7 @@ userController.getUser = async (req, res, next) => {
   }
 };
 
+// update user data (from dashboard)
 userController.updateUserNameAndProfile = async (req, res, next) => {
   try {
     const { email } = req.params;

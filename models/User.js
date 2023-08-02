@@ -45,7 +45,7 @@ const userSchema = new Schema(
     },
     selectedPlan: {
       type: String,
-      enum: ["trial", "basic", "premium", "none"],
+      enum: ["none", "trial", "premium"],
       required: true,
       default: "none",
     },
@@ -53,9 +53,9 @@ const userSchema = new Schema(
       type: Date,
       required: true,
     },
-    usedCreditToday: {
-      type: Number,
-      default: 0,
+    notifications: {
+      type: Array,
+      default: [],
     },
     lastLogin: {
       type: Date,

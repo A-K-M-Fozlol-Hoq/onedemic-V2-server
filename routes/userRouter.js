@@ -30,9 +30,3 @@ router
   .put("/update-user-name-and-profile/:email", updateUserNameAndProfile);
 
 module.exports = router;
-
-/*
-alternative way to decalre routes
-router.post("/createUser", isAuthenticated, isUserValid, createUser);
-router.post("/getUser", getUser);
-*/

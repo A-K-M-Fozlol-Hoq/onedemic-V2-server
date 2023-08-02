@@ -21,12 +21,21 @@ const PORT = process.env.PORT || 5000;
 //used middlewares
 const middlewares = [
   cors(),
-  express.json({ limit: "10mb" }),
+  // express.json({ limit: "10mb" }),
   cookieParser(),
   fileUpload(),
   express.urlencoded({ extended: true }),
 ];
 app.use(middlewares);
+
+app.use((req, res, next) => {
+  console.log(req.originalUrl);
+  if (req.originalUrl === "/stripe/webhook") {
+    next();
+  } else {
+    express.json({ limit: "10mb" })(req, res, next);
+  }
+});
 
 //use morgan at development environment
 if (process.env.NODE_ENV !== "production") {
@@ -34,7 +43,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 //declare routes
-app.use(routers);
+app.use("/api/v1", routers);
 
 //hello world get request method
 app.get("/", (req, res) => {

@@ -8,6 +8,7 @@ const admin = require("../config/firebase.config.js");
 //create isAuthenticated middleware
 const isAuthenticated = (req, res, next) => {
   try {
+    // console.log(req.headers?.authorization)
     if (!req.headers?.authorization?.startsWith("Bearer ")) {
       next(createError(401, "Please send a valid token"));
     } else {

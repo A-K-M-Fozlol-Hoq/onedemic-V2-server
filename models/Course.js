@@ -1,23 +1,26 @@
 // external imports
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 // create schema
 const courseSchema = new Schema(
   {
-    courseName: {
+    name: {
       type: String,
       required: true,
     },
-    courseTeacher: {
+    teacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
-    courseCode: {
+    code: {
       type: String,
       unique: true,
+      required: true,
     },
     photo: {
       type: String,
+      required: true,
     },
     students: [
       {
