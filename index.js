@@ -1,12 +1,19 @@
-//external imports
+const {
+  addUser,
+  removeUser,
+  getUserById,
+  getRoomUsers,
+} = require("./utils/message");
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const fileUpload = require("express-fileupload");
+const http = require("http");
+const { Server } = require("socket.io");
+const Chat = require("./models/Chat");
 
-//internal imports
 const mongoDBConnect = require("./config/db");
 const routers = require("./routes");
 const {
@@ -14,18 +21,16 @@ const {
   commonErrorHandler,
 } = require("./middlewares/errorHandler");
 
-//create app object and define port
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-//used middlewares
 const middlewares = [
   cors(),
-  // express.json({ limit: "10mb" }),
   cookieParser(),
   fileUpload(),
   express.urlencoded({ extended: true }),
 ];
+
 app.use(middlewares);
 
 app.use((req, res, next) => {
@@ -37,15 +42,12 @@ app.use((req, res, next) => {
   }
 });
 
-//use morgan at development environment
 if (process.env.NODE_ENV !== "production") {
   app.use(require("morgan")("dev"));
 }
 
-//declare routes
 app.use("/api/v1", routers);
 
-//hello world get request method
 app.get("/", (req, res) => {
   res.status(200).send({
     message: "Hello From onedemic!❤",
@@ -53,17 +55,77 @@ app.get("/", (req, res) => {
   });
 });
 
-// // 404 not found handler
+// ################################# Messaging part #################################
+// Socket.io Connection
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("join", (userData, callback) => {
+    console.log(userData);
+    const { userId, room } = userData;
+    console.log({ userId, room });
+    const { error, user } = addUser({ id: socket.id, userId, room });
+    if (error) {
+      callback(error);
+    }
+
+    socket.join(room);
+
+    const roomUsers = getRoomUsers(room);
+    io.to(room).emit("userList", { roomUsers: roomUsers });
+    io.emit("userList", {
+      _id: "newMessage._id",
+    });
+
+    callback();
+  });
+
+  socket.on("message", async (data) => {
+    console.log(data);
+    const newMessage = new Chat(data);
+    await newMessage.save();
+
+    const user = getUserById(socket.id);
+
+    io.to(user?.room).emit("message", {
+      _id: newMessage._id,
+      message: newMessage.message,
+      isSentFromTeacher: newMessage.isSentFromTeacher,
+      senderId: newMessage.senderId,
+      createdAt: newMessage.createdAt || "createdAt",
+    });
+  });
+
+  socket.on("disconnect", () => {
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit("message", {
+        user: "System",
+        text: `${user.name} just left ${user.room}.`,
+      });
+
+      const roomUsers = getRoomUsers(user.room);
+      io.to(user.room).emit("userList", { roomUsers });
+    }
+  });
+});
+
 app.use(notFoundHandler);
 
-// common error handler
 app.use(commonErrorHandler);
 
-// Listening to server
 mongoDBConnect
   .then(() => {
     console.log(`Alhamdu lillah, mongoose DB connected`);
-    app.listen(PORT, () => console.log("onedemic is running on PORT:", PORT));
+    server.listen(PORT, () =>
+      console.log("onedemic is running on PORT:", PORT)
+    );
   })
   .catch((e) => {
     console.log(e);

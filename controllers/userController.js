@@ -63,6 +63,7 @@ userController.createUser = async (req, res) => {
 userController.getUser = async (req, res, next) => {
   try {
     const { email } = req.params;
+    console.log({ email });
     const user = await User.findOne({ email: email }).select("-courses");
 
     if (!user) {
