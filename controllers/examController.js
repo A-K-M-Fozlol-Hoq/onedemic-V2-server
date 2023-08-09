@@ -114,7 +114,67 @@ examController.createExam = async (req, res) => {
   }
 };
 
-module.exports = examController;
+// create getExams function
+examController.getExams = async (req, res) => {
+  try {
+    const { courseId } = req.params;
 
-// const Exam = require('../models/Exam');
-// const User = require('../models/User');
+    // Validate courseId
+    if (!courseId) {
+      return res.status(422).send({
+        message: "Please provide a valid courseId",
+        isSuccess: false,
+      });
+    }
+
+    // Find exams for the provided courseId with endDateTime in the future
+    const currentDateTime = new Date();
+    const exams = await Exam.find({
+      course: courseId,
+      endDateTime: { $gt: currentDateTime },
+    }).select("-mcqQuestions -questionPaperID");
+
+    res.status(200).send({
+      message: "Exams retrieved successfully",
+      isSuccess: true,
+      data: exams,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.code || 500).send({
+      message: error.message || "Something went wrong",
+      isSuccess: false,
+    });
+  }
+};
+
+// create getFullExam function
+examController.getFullExam = async (req, res) => {
+  try {
+    const { examId } = req.params;
+
+    // Find exam by examId
+    const exam = await Exam.findById(examId).select("-mcqQuestions.answer");
+
+    if (!exam) {
+      return res.status(404).send({
+        message: "Exam not found",
+        isSuccess: false,
+      });
+    }
+
+    res.status(200).send({
+      message: "Exam details retrieved successfully",
+      isSuccess: true,
+      data: exam,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.code || 500).send({
+      message: error.message || "Something went wrong",
+      isSuccess: false,
+    });
+  }
+};
+
+module.exports = examController;
