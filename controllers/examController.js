@@ -129,10 +129,16 @@ examController.getExams = async (req, res) => {
 
     // Find exams for the provided courseId with endDateTime in the future
     const currentDateTime = new Date();
+
     const exams = await Exam.find({
       course: courseId,
       endDateTime: { $gt: currentDateTime },
-    }).select("-mcqQuestions -questionPaperID");
+    })
+      .select("-mcqQuestions -questionPaperID")
+      .populate({
+        path: "course",
+        select: "name photo", // Specify the fields you want to populate
+      });
 
     res.status(200).send({
       message: "Exams retrieved successfully",
