@@ -15,17 +15,17 @@ const router = express.Router();
 router
   /**
    * @method POST
-   * @endpoint base_url/api/user/createUser
+   * @endpoint base_url/api/v1/user/createUser
    */
   .post("/createUser", isUserValid, isAuthenticated, createUser)
   /**
    * @method GET
-   * @endpoint base_url/api/user/getUser/:email
+   * @endpoint base_url/api/v1/user/getUser/:email
    */
   .get("/getUser/:email", getUser)
   /**
    * @method GET
-   * @endpoint base_url/api/user//update-user-name-and-profile/:email
+   * @endpoint base_url/api/v1/user//update-user-name-and-profile/:email
    */
   .put("/update-user-name-and-profile/:email", updateUserNameAndProfile);
 

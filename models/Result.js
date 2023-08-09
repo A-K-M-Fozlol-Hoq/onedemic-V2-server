@@ -31,8 +31,14 @@ const resultSchema = new Schema(
             },
           },
         ],
+        mark: {
+          type: Number,
+          default: 0,
+        },
         answerScriptID: {
-          type: String,
+          // type: String,
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "PDF",
         },
       },
     ],

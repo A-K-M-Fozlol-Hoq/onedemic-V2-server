@@ -24,32 +24,32 @@ const router = express.Router();
 router
   /**
    * @method POST
-   * @endpoint base_url/api/course/create-course
+   * @endpoint base_url/api/v1/course/create-course
    */
   .post("/create-course", isAuthenticated, createCourse)
   /**
    * @method POST
-   * @endpoint base_url/api/course/enroll-course
+   * @endpoint base_url/api/v1/course/enroll-course
    */
   .post("/enroll-course", isAuthenticated, enrollCourse)
   /**
    * @method GET
-   * @endpoint base_url/api/course/courses/:userEmail
+   * @endpoint base_url/api/v1/course/courses/:userEmail
    */
   .get("/courses/:userEmail", isAuthenticated, getCourses)
   /**
    * @method GET
-   * @endpoint base_url/api/course/:courseId
+   * @endpoint base_url/api/v1/course/:courseId
    */
   .get("/:courseId", isAuthenticated, getSingleCourse)
   /**
    * @method GET
-   * @endpoint base_url/api/course/is-code-available/:code
+   * @endpoint base_url/api/v1/course/is-code-available/:code
    */
   .get("/is-code-available/:code", isAuthenticated, isCodeAvailable)
   /**
    * @method POST
-   * @endpoint base_url/api/course/approve-or-reject-pending-students/
+   * @endpoint base_url/api/v1/course/approve-or-reject-pending-students/
    */
   .post(
     "/approve-or-reject-pending-students/",
@@ -58,17 +58,17 @@ router
   )
   /**
    * @method POST
-   * @endpoint base_url/api/course/block-student
+   * @endpoint base_url/api/v1/course/block-student
    */
   .post("/block-student", isAuthenticated, blockStudent)
   /**
    * @method POST
-   * @endpoint base_url/api/course/unblock-student
+   * @endpoint base_url/api/v1/course/unblock-student
    */
   .post("/unblock-student", isAuthenticated, unBlockStudent)
   /**
    * @method POST
-   * @endpoint base_url/api/course/unblock-and-add-student
+   * @endpoint base_url/api/v1/course/unblock-and-add-student
    */
   .post("/unblock-and-add-student", isAuthenticated, unBlockAndAddStudent);
 

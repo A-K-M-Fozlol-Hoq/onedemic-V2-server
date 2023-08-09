@@ -2,20 +2,20 @@
 const express = require("express");
 
 //internal imports
-const chatController = require("../controllers/chatController");
+const pdfController = require("../controllers/pdfController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 // Destructuring controller
-const { getMessages } = chatController;
+const { createPDF } = pdfController;
 
 // Router Object -- module scaffolding
 const router = express.Router();
 
 router
   /**
-   * @method GET
-   * @endpoint base_url/api/v1/chat/get-messages/:courseId
+   * @method POST
+   * @endpoint base_url/api/v1/pdf/create-pdf
    */
-  .get("/get-messages/:courseId", isAuthenticated, getMessages);
+  .post("/create-pdf", isAuthenticated, createPDF);
 
 module.exports = router;

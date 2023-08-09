@@ -1,5 +1,6 @@
 // external imports
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
 // create schema
 const examSchema = new Schema(
@@ -41,7 +42,7 @@ const examSchema = new Schema(
             required: true,
           },
         ],
-        correctOption: {
+        answer: {
           type: String,
           required: true,
         },

@@ -11,7 +11,7 @@ chatController.getMessages = async (req, res, next) => {
     const messages = await Chat.find({ courseId })
       .sort({ createdAt: -1 })
       .exec();
-    res.json(messages);
+    res.json(messages || []);
   } catch (err) {
     res.status(err.code || 500).send({
       message: err.message || `unknown error ocurred at chat controller`,
