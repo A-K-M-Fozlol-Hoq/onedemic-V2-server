@@ -1,47 +1,51 @@
 // external imports
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
 // create schema
 const resultSchema = new Schema(
   {
-    course: {
+    exam: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "Exam",
+      required: true,
     },
-    results: [
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    examType: {
+      type: String,
+      enum: ["mcq", "written"],
+      required: true,
+    },
+    answeredMcqs: [
       {
-        student: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+        question: {
+          type: String,
+          required: true,
         },
-        answeredMcqs: [
+        options: [
           {
-            question: {
-              type: String,
-              required: true,
-            },
-            options: [
-              {
-                type: String,
-                required: true,
-              },
-            ],
-            selectedOption: {
-              type: String,
-            },
+            type: String,
+            required: true,
           },
         ],
-        mark: {
-          type: Number,
-          default: 0,
-        },
-        answerScriptID: {
-          // type: String,
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "PDF",
+        selectedOption: {
+          type: String,
         },
       },
     ],
+    mark: {
+      type: Number,
+      default: 0,
+    },
+    answerScriptID: {
+      // type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PDF",
+    },
   },
   {
     timestamps: true,

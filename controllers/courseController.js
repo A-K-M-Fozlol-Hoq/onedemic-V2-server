@@ -343,6 +343,55 @@ courseController.approveOrRejectPendingStudents = async (req, res) => {
   }
 };
 
+// Remove student from a specific course
+courseController.removeStudent = async (req, res) => {
+  try {
+    const courseId = req.body.courseId;
+    const studentId = req.body.studentId;
+
+    // Find the course and the user
+    const course = await Course.findById(courseId).exec();
+    const studentUser = await User.findById(studentId).exec();
+
+    if (!course || !studentUser) {
+      return res.status(404).send({
+        message: "Course or Student not found",
+        isSuccess: false,
+      });
+    }
+
+    // Remove the studentId from the students array
+    const studentIndex = course.students.indexOf(studentId);
+    if (studentIndex !== -1) {
+      course.students.splice(studentIndex, 1);
+      await course.save();
+    } else {
+      return res.status(400).send({
+        message: "Student is not enrolled in this course",
+        isSuccess: false,
+      });
+    }
+
+    // Remove the courseId from the user's courses array
+    const courseIndex = studentUser.courses.indexOf(courseId);
+    if (courseIndex !== -1) {
+      studentUser.courses.splice(courseIndex, 1);
+      await studentUser.save();
+    }
+
+    return res.status(200).send({
+      message: "Student is removed from the course successfully",
+      isSuccess: true,
+      course: course,
+    });
+  } catch (error) {
+    return res.status(error.code || 500).send({
+      message: error.message || "Something went wrong",
+      isSuccess: false,
+    });
+  }
+};
+
 // Block and remove student from a specific course
 courseController.blockStudent = async (req, res) => {
   try {

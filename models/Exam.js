@@ -48,19 +48,6 @@ const examSchema = new Schema(
         },
       },
     ],
-    // studentsProgress: [
-    //   {
-    //     student: {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: "User",
-    //       required: true,
-    //     },
-    //     answeredMcqQuestions: {
-    //       type: Number,
-    //       default: 0,
-    //     },
-    //   },
-    // ],
   },
   {
     timestamps: true,

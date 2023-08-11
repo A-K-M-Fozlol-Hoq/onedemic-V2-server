@@ -16,6 +16,7 @@ const {
   blockStudent,
   unBlockStudent,
   unBlockAndAddStudent,
+  removeStudent,
 } = courseController;
 
 // Router Object -- module scaffolding
@@ -56,6 +57,11 @@ router
     isAuthenticated,
     approveOrRejectPendingStudents
   )
+  /**
+   * @method POST
+   * @endpoint base_url/api/v1/course/remove-student
+   */
+  .post("/remove-student", isAuthenticated, removeStudent)
   /**
    * @method POST
    * @endpoint base_url/api/v1/course/block-student
