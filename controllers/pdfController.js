@@ -49,4 +49,33 @@ pdfController.createPDF = async (req, res) => {
   }
 };
 
+// retrieve pdf by pdfId (_id of pdf)
+pdfController.getPDFById = async (req, res) => {
+  try {
+    const pdfId = req.params.pdfId;
+
+    // Find the PDF document by _id
+    const pdf = await PDF.findById(pdfId);
+
+    if (!pdf) {
+      res.status(404).send({
+        message: "PDF not found",
+        isSuccess: false,
+      });
+      return;
+    }
+
+    res.status(200).send({
+      message: "PDF retrieved successfully",
+      isSuccess: true,
+      data: pdf,
+    });
+  } catch (error) {
+    res.status(error.code || 500).send({
+      message: error.message || `Something went wrong`,
+      isSuccess: false,
+    });
+  }
+};
+
 module.exports = pdfController;

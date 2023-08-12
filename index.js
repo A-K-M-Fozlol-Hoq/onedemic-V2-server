@@ -1,3 +1,4 @@
+const multer = require("multer");
 const {
   addUser,
   removeUser,
@@ -20,6 +21,7 @@ const {
   notFoundHandler,
   commonErrorHandler,
 } = require("./middlewares/errorHandler");
+const { default: mongoose } = require("mongoose");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
