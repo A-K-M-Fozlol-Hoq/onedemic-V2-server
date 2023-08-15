@@ -14,7 +14,7 @@ examController.createExam = async (req, res) => {
       startDateTime,
       endDateTime,
       examType,
-      questionPaperID,
+      questionPaper,
       mcqQuestions,
     } = req.body;
 
@@ -93,7 +93,7 @@ examController.createExam = async (req, res) => {
       startDateTime,
       endDateTime,
       examType,
-      questionPaperID,
+      questionPaper,
       mcqQuestions,
       teacher: teacher._id, // Use the teacher from the course
     });
@@ -134,7 +134,7 @@ examController.getExams = async (req, res) => {
       course: courseId,
       endDateTime: { $gt: currentDateTime },
     })
-      .select("-mcqQuestions -questionPaperID")
+      .select("-mcqQuestions -questionPaper")
       .populate({
         path: "course",
         select: "name photo", // Specify the fields you want to populate

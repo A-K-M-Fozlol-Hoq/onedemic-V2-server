@@ -26,9 +26,10 @@ const examSchema = new Schema(
       enum: ["mcq", "written"],
       required: true,
     },
-    questionPaperID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PDF",
+    questionPaper: {
+      type: String,
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "PDF",
     },
     mcqQuestions: [
       {

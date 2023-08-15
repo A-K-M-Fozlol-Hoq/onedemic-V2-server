@@ -79,60 +79,56 @@ resultController.saveMCQ = async (req, res, next) => {
   }
 };
 
+// save cq exam result
+resultController.saveCQ = async (req, res, next) => {
+  try {
+    const { studentId, examId, examType, answerScript } = req.body;
+
+    // Check if the data is provided properly
+    if (!studentId || !examId || !examType || !answerScript) {
+      return res.status(422).send({
+        isSuccess: false,
+        message: "Please provide all necessary data",
+      });
+    }
+
+    // Check if previous data with the same studentId and examId exists
+    const existingResult = await Result.findOne({
+      student: studentId,
+      exam: examId,
+    });
+
+    if (existingResult) {
+      return res.status(422).send({
+        isSuccess: false,
+        message: "You already submitted one answer script",
+      });
+    }
+
+    // Create a new result instance
+    const resultData = {
+      exam: examId,
+      student: studentId,
+      examType: examType,
+      answerScript: answerScript,
+    };
+
+    const newResult = new Result(resultData);
+
+    // Save the new result
+    await newResult.save();
+
+    return res.status(200).send({
+      isSuccess: true,
+      message: "Result saved successfully",
+      data: newResult,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      isSuccess: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
 module.exports = resultController;
-
-// async function saveResult(req, res) {
-//   try {
-//     const { studentId, examId, examType, answerScriptID } = req.body;
-
-//     // Check if the data is provided properly
-//     if (!studentId || !examId || !examType || !answerScriptID) {
-//       return res.status(422).send({
-//         isSuccess: false,
-//         message: "Please provide all necessary data",
-//       });
-//     }
-
-// // Check if previous data with the same studentId and examId exists
-// const existingResult = await Result.findOne({
-//   student: studentId,
-//   exam: examId,
-// });
-
-// if (existingResult) {
-//   return res.status(422).send({
-//     isSuccess: false,
-//     message: "You already submitted one answer script",
-//   });
-// }
-
-//     // Create a new result instance
-//     const resultData = {
-//       exam: examId,
-//       student: studentId,
-//       examType: examType,
-//       answerScriptID: answerScriptID,
-//     };
-
-//     const newResult = new Result(resultData);
-
-//     // Save the new result
-//     await newResult.save();
-
-//     return res.status(200).send({
-//       isSuccess: true,
-//       message: "Result saved successfully",
-//       data: newResult,
-//     });
-//   } catch (error) {
-//     return res.status(500).send({
-//       isSuccess: false,
-//       message: error.message || "Something went wrong",
-//     });
-//   }
-// }
-
-// // Example usage in a route
-// app.post("/saveResult", async (req, res) => {
-//   await saveResult(req, res);
-// });

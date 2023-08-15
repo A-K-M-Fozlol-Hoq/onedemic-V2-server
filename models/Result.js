@@ -41,10 +41,10 @@ const resultSchema = new Schema(
       type: Number,
       default: 0,
     },
-    answerScriptID: {
-      // type: String,
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PDF",
+    answerScript: {
+      type: String,
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "PDF",
     },
   },
   {
