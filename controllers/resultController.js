@@ -131,4 +131,27 @@ resultController.saveCQ = async (req, res, next) => {
   }
 };
 
+// Get all results for a given examId with student's name and email populated
+resultController.getResultsForExam = async (req, res, next) => {
+  try {
+    const examId = req.params.examId;
+
+    // Find all results for the given examId and populate student information
+    const results = await Result.find({ exam: examId })
+      .select("-answeredMcqs") // Excludes the answeredMcqs field
+      .populate("student", "name email")
+      .exec();
+
+    return res.status(200).send({
+      isSuccess: true,
+      data: results || [],
+    });
+  } catch (error) {
+    return res.status(500).send({
+      isSuccess: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
 module.exports = resultController;

@@ -1,4 +1,5 @@
 // internal imports
+const { default: mongoose } = require("mongoose");
 const Course = require("../models/Course");
 const Exam = require("../models/Exam");
 
@@ -114,8 +115,48 @@ examController.createExam = async (req, res) => {
   }
 };
 
-// create getExams function
+// create getExams function (for student dashboard)
 examController.getExams = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // Validate courseId
+    if (!courseId) {
+      return res.status(422).send({
+        message: "Please provide a valid courseId",
+        isSuccess: false,
+      });
+    }
+
+    // Find exams for the provided courseId with endDateTime in the future
+    const currentDateTime = new Date();
+
+    const exams = await Exam.find({
+      course: courseId,
+      endDateTime: { $gt: currentDateTime },
+    })
+      .select("-mcqQuestions -questionPaper")
+      .populate({
+        path: "course",
+        select: "name photo", // Specify the fields you want to populate
+      });
+
+    res.status(200).send({
+      message: "Exams retrieved successfully",
+      isSuccess: true,
+      data: exams,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.code || 500).send({
+      message: error.message || "Something went wrong",
+      isSuccess: false,
+    });
+  }
+};
+
+// create getAllExams function (for teacher dashboard)
+examController.getAllExams = async (req, res) => {
   try {
     const { courseId } = req.params;
 
@@ -160,7 +201,12 @@ examController.getFullExam = async (req, res) => {
     const { examId } = req.params;
 
     // Find exam by examId
-    const exam = await Exam.findById(examId).select("-mcqQuestions.answer");
+    const exam = await Exam.findById(examId)
+      .populate({
+        path: "course",
+        select: "name photo", // Select the fields you want to populate
+      })
+      .select("-mcqQuestions.answer");
 
     if (!exam) {
       return res.status(404).send({
@@ -173,6 +219,43 @@ examController.getFullExam = async (req, res) => {
       message: "Exam details retrieved successfully",
       isSuccess: true,
       data: exam,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(error.code || 500).send({
+      message: error.message || "Something went wrong",
+      isSuccess: false,
+    });
+  }
+};
+
+// Create the deleteExam function
+examController.deleteExam = async (req, res) => {
+  try {
+    const { examId } = req.params;
+
+    // Validate examId
+    if (!examId || !mongoose.Types.ObjectId.isValid(examId)) {
+      return res.status(422).send({
+        message: "Please provide a valid examId",
+        isSuccess: false,
+      });
+    }
+
+    // Delete the exam by examId
+    const deletedExam = await Exam.findByIdAndDelete(examId);
+
+    if (!deletedExam) {
+      return res.status(404).send({
+        message: "Exam not found",
+        isSuccess: false,
+      });
+    }
+
+    res.status(200).send({
+      message: "Exam deleted successfully",
+      isSuccess: true,
+      data: deletedExam,
     });
   } catch (error) {
     console.log(error.message);
