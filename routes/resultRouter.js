@@ -6,7 +6,7 @@ const resultController = require("../controllers/resultController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 // Destructuring controller
-const { saveMCQ, saveCQ, getResultsForExam } = resultController;
+const { saveMCQ, saveCQ, getResultsForExam, updateMark } = resultController;
 
 // Router Object -- module scaffolding
 const router = express.Router();
@@ -22,6 +22,11 @@ router
    * @endpoint base_url/api/v1/result/save-cq
    */
   .post("/save-cq", isAuthenticated, saveCQ)
+  /**
+   * @method PUT
+   * @endpoint base_url/api/v1/result/update-mark
+   */
+  .put("/update-mark", isAuthenticated, updateMark)
   /**
    * @method GET
    * @endpoint base_url/api/v1/result/get-result/:examId

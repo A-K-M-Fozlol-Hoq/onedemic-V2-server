@@ -138,13 +138,51 @@ resultController.getResultsForExam = async (req, res, next) => {
 
     // Find all results for the given examId and populate student information
     const results = await Result.find({ exam: examId })
-      .select("-answeredMcqs") // Excludes the answeredMcqs field
+      // .select("-answeredMcqs") // Excludes the answeredMcqs field
       .populate("student", "name email")
       .exec();
 
     return res.status(200).send({
       isSuccess: true,
       data: results || [],
+    });
+  } catch (error) {
+    return res.status(500).send({
+      isSuccess: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+// Get all results for a given examId with student's name and email populated
+resultController.updateMark = async (req, res, next) => {
+  try {
+    const resultId = req.body.resultId;
+    const updatedMark = req.body.updatedMark;
+
+    if (!updatedMark || isNaN(updatedMark)) {
+      return res.status(422).send({
+        isSuccess: false,
+        message: "Invalid or missing mark value",
+      });
+    }
+
+    const result = await Result.findById(resultId);
+
+    if (!result) {
+      return res.status(404).send({
+        isSuccess: false,
+        message: "Result not found",
+      });
+    }
+
+    result.mark = updatedMark;
+    await result.save();
+
+    return res.status(200).send({
+      isSuccess: true,
+      message: "Mark updated successfully",
+      data: result,
     });
   } catch (error) {
     return res.status(500).send({

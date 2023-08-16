@@ -68,9 +68,9 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   socket.on("join", (userData, callback) => {
-    console.log(userData);
+    // console.log(userData);
     const { userId, room } = userData;
-    console.log({ userId, room });
+    // console.log({ userId, room });
     const { error, user } = addUser({ id: socket.id, userId, room });
     if (error) {
       callback(error);
@@ -88,17 +88,22 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", async (data) => {
-    console.log(data);
+    // console.log(data);
     const newMessage = new Chat(data);
     await newMessage.save();
 
     const user = getUserById(socket.id);
+    const newMessageData = await Chat.find({ _id: newMessage?._id }).populate(
+      "senderId",
+      "name"
+    );
+    console.log(newMessageData, "ho");
 
     io.to(user?.room).emit("message", {
       _id: newMessage._id,
       message: newMessage.message,
       isSentFromTeacher: newMessage.isSentFromTeacher,
-      senderId: newMessage.senderId,
+      senderId: newMessageData[0].senderId,
       createdAt: newMessage.createdAt || "createdAt",
     });
   });

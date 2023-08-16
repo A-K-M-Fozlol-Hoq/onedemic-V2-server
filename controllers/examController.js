@@ -168,12 +168,8 @@ examController.getAllExams = async (req, res) => {
       });
     }
 
-    // Find exams for the provided courseId with endDateTime in the future
-    const currentDateTime = new Date();
-
     const exams = await Exam.find({
       course: courseId,
-      endDateTime: { $gt: currentDateTime },
     })
       .select("-mcqQuestions -questionPaper")
       .populate({

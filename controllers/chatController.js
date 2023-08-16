@@ -9,6 +9,7 @@ chatController.getMessages = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const messages = await Chat.find({ courseId })
+      .populate("senderId", "name")
       .sort({ createdAt: -1 })
       .exec();
     res.json(messages || []);
