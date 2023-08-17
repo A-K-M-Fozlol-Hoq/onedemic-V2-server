@@ -256,7 +256,7 @@ courseController.enrollCourse = async (req, res) => {
 courseController.approveOrRejectPendingStudents = async (req, res) => {
   try {
     const courseId = req.body.courseId;
-    const userId = req.body.userId;
+    const userId = req.body.studentId;
     const action = req.body.action; // 'accept' or 'reject' sent by the teacher
 
     // Find the course and the user

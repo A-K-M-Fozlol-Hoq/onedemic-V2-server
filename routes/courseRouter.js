@@ -49,33 +49,33 @@ router
    */
   .get("/is-code-available/:code", isAuthenticated, isCodeAvailable)
   /**
-   * @method POST
+   * @method PUT
    * @endpoint base_url/api/v1/course/approve-or-reject-pending-students/
    */
-  .post(
+  .put(
     "/approve-or-reject-pending-students/",
     isAuthenticated,
     approveOrRejectPendingStudents
   )
   /**
-   * @method POST
+   * @method PUT
    * @endpoint base_url/api/v1/course/remove-student
    */
-  .post("/remove-student", isAuthenticated, removeStudent)
+  .put("/remove-student", isAuthenticated, removeStudent)
   /**
-   * @method POST
+   * @method PUT
    * @endpoint base_url/api/v1/course/block-student
    */
-  .post("/block-student", isAuthenticated, blockStudent)
+  .put("/block-student", isAuthenticated, blockStudent)
   /**
-   * @method POST
+   * @method PUT
    * @endpoint base_url/api/v1/course/unblock-student
    */
-  .post("/unblock-student", isAuthenticated, unBlockStudent)
+  .put("/unblock-student", isAuthenticated, unBlockStudent)
   /**
-   * @method POST
+   * @method PUT
    * @endpoint base_url/api/v1/course/unblock-and-add-student
    */
-  .post("/unblock-and-add-student", isAuthenticated, unBlockAndAddStudent);
+  .put("/unblock-and-add-student", isAuthenticated, unBlockAndAddStudent);
 
 module.exports = router;
