@@ -1,4 +1,5 @@
 // internal imports
+const nodemailer = require("nodemailer");
 const { default: mongoose } = require("mongoose");
 const Course = require("../models/Course");
 const Exam = require("../models/Exam");
@@ -100,6 +101,7 @@ examController.createExam = async (req, res) => {
     });
 
     const newExam = await exam.save();
+    sendEmail(courseId, startDateTime);
 
     res.status(200).send({
       message: "Exam created successfully",
@@ -263,3 +265,51 @@ examController.deleteExam = async (req, res) => {
 };
 
 module.exports = examController;
+
+// Function to add a notification task to the queue
+async function sendEmail(courseId, startDateTime) {
+  try {
+    const course = await Course.findById(courseId).populate(
+      "students",
+      "selectedPlan endDate email name"
+    );
+    const premiumStudents = course.students.filter(
+      (student) =>
+        student.selectedPlan === "premium" && student.endDate > new Date()
+    );
+    console.log(premiumStudents, "premium students");
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // e.g., 'gmail'
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    for (const student of premiumStudents) {
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: student.email,
+        subject: "New Exam Scheduled for Your Enrolled Course",
+        html: `
+          <h1>New Exam Scheduled!</h1>
+          <p>Hello ${student.name},</p>
+          <p>A new exam has been scheduled for your enrolled course <strong>${course.name}</strong> on <strong>${startDateTime}</strong>.</p>
+          <p>Be sure to mark your calendar and prepare for the upcoming exam!</p>
+          <p>Best regards,</p>
+          <p>Team Onedemic</p>
+        `,
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Notification email sent to ${student.email}`);
+      } catch (emailError) {
+        console.error(`Error sending email to ${student.email}:`, emailError);
+      }
+    }
+  } catch (notificationError) {
+    console.error("Error sending notifications:", notificationError);
+  }
+}

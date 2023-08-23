@@ -49,35 +49,3 @@ mcqSchema.index({ answer: 1 });
 const MCQ = model("MCQ", mcqSchema);
 
 module.exports = MCQ;
-
-// // external imports
-// const { Schema, model } = require("mongoose");
-
-// // create schema
-// const mcqSchema = new Schema(
-//   {
-//     question: {
-//       type: String,
-//       required: true,
-//     },
-//     options: [
-//       {
-//         type: String,
-//       },
-//     ],
-//     answer: {
-//       type: String,
-//       required: true,
-//     },
-//   },
-//   {
-//     timestamps: true,
-//     collection: "mcq",
-//   }
-// );
-
-// // create model
-// const MCQ = model("MCQ", mcqSchema);
-
-// // export model
-// module.exports = MCQ;

@@ -53,10 +53,6 @@ const userSchema = new Schema(
       type: Date,
       required: true,
     },
-    notifications: {
-      type: Array,
-      default: [],
-    },
     lastLogin: {
       type: Date,
       required: true,
