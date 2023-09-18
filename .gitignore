@@ -4,3 +4,4 @@ package-lock.json
 .yarn
 yarn
 yarn.lock
+.vercel

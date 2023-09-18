@@ -37,7 +37,7 @@ app.use(middlewares);
 
 app.use((req, res, next) => {
   console.log(req.originalUrl);
-  if (req.originalUrl === "/stripe/webhook") {
+  if (req.originalUrl === "/api/v1/stripe/webhook") {
     next();
   } else {
     express.json({ limit: "10mb" })(req, res, next);

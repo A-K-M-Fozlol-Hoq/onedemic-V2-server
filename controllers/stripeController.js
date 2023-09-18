@@ -23,8 +23,8 @@ stripeController.createSession = async (req, res) => {
               quantity: 1,
             },
           ],
-          success_url: "https://app.onedemic.io/payment_success",
-          cancel_url: "https://app.onedemic.io/payment_fail",
+          success_url: "https://onedemic.netlify.app/dashboard/manage-profile",
+          cancel_url: "https://onedemic.netlify.app/dashboard/manage-profile",
           customer: stripeCustomerId,
         },
         {
@@ -56,7 +56,7 @@ stripeController.webhook = async (request, response, next) => {
   try {
     console.log("object");
     const sig = request.headers["stripe-signature"];
-    const endpointSecret = "whsec_4ZPIaEILCdztUKaRCvjnMm8Iexqg8VLY";
+    const endpointSecret = "whsec_Wos90NZ9cN2acmpTUaDGjJCir828oCT9";
 
     let event;
 
